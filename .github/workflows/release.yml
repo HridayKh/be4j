@@ -9,7 +9,15 @@ permissions:
   contents: write
 
 jobs:
+  update-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set version
+        run: mvn versions:set -DnewVersion=${GITHUB_REF_NAME#v} ; mvn versions:commit
+
   build:
+    needs: update-version
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,9 +27,6 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-
-      - name: Set version
-        run: mvn versions:set -DnewVersion=${GITHUB_REF_NAME#v} ; mvn versions:commit
 
       - name: Build
         run: mvn clean package
@@ -34,6 +39,11 @@ jobs:
           body_path: CHANGELOG.md
           files: target/be4j-*.jar
 
+  bump-version:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
       - name: Bump version to next SNAPSHOT
         run: |
           CURRENT=${GITHUB_REF_NAME#v}
@@ -41,11 +51,22 @@ jobs:
           mvn versions:set -DnewVersion=$NEXT-SNAPSHOT
           mvn versions:commit
 
-      - name: Commit version bump
+      - name: Bump version to next SNAPSHOT
         run: |
+          CURRENT=${GITHUB_REF_NAME#v}
+          NEXT=$(echo $CURRENT | awk -F. '{printf "%d.%d.%d", $1, $2, $3+1}')
+
+          git fetch origin main
+          git checkout main
+
+          mvn versions:set -DnewVersion=$NEXT-SNAPSHOT
+          mvn versions:commit
+
           git config user.name "be4j-release-actions-bot"
           git config user.email "actions@github.com"
+
           git add pom.xml
           git commit -m "chore: start $NEXT-SNAPSHOT [skip ci]"
           git push origin main
+
 
