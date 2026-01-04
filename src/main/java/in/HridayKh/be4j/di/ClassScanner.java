@@ -1,4 +1,4 @@
-package in.HridayKh.DI;
+package in.HridayKh.be4j.di;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -12,21 +12,21 @@ import org.reflections.scanners.Scanners;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
-import in.HridayKh.DI.ReflectionMetas.ConfigInjectionPoint;
-import in.HridayKh.DI.ReflectionMetas.InjectPoint;
-import in.HridayKh.DI.ReflectionMetas.MethodLevelPathMeta;
-import in.HridayKh.DI.ReflectionMetas.SingletonMeta;
-import in.HridayKh.DI.annotations.Methods.DELETE;
-import in.HridayKh.DI.annotations.Methods.GET;
-import in.HridayKh.DI.annotations.Methods.PATCH;
-import in.HridayKh.DI.annotations.Methods.POST;
-import in.HridayKh.DI.annotations.Methods.PUT;
-import in.HridayKh.DI.annotations.Config;
-import in.HridayKh.DI.annotations.Inject;
-import in.HridayKh.DI.annotations.Path;
-import in.HridayKh.DI.annotations.Singleton;
-import in.HridayKh.config.ConfigLoader;
-import in.HridayKh.http.HttpMethod;
+import in.HridayKh.be4j.annotations.Config;
+import in.HridayKh.be4j.annotations.Inject;
+import in.HridayKh.be4j.annotations.Path;
+import in.HridayKh.be4j.annotations.Singleton;
+import in.HridayKh.be4j.annotations.Methods.DELETE;
+import in.HridayKh.be4j.annotations.Methods.GET;
+import in.HridayKh.be4j.annotations.Methods.PATCH;
+import in.HridayKh.be4j.annotations.Methods.POST;
+import in.HridayKh.be4j.annotations.Methods.PUT;
+import in.HridayKh.be4j.config.ConfigLoader;
+import in.HridayKh.be4j.di.ReflectionMetas.ConfigInjectionPoint;
+import in.HridayKh.be4j.di.ReflectionMetas.InjectPoint;
+import in.HridayKh.be4j.di.ReflectionMetas.MethodLevelPathMeta;
+import in.HridayKh.be4j.di.ReflectionMetas.SingletonMeta;
+import in.HridayKh.be4j.http.HttpMethod;
 
 public class ClassScanner {
 

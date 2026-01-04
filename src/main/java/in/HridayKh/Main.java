@@ -1,12 +1,12 @@
 package in.HridayKh;
 
-import in.HridayKh.DI.ClassScanner;
-import in.HridayKh.DI.DiContainer;
-import in.HridayKh.DI.Registry;
-import in.HridayKh.DI.RegistryValidator;
-import in.HridayKh.config.ConfigLoader;
-import in.HridayKh.http.Http;
-import in.HridayKh.http.RouteRegistry;
+import in.HridayKh.be4j.config.ConfigLoader;
+import in.HridayKh.be4j.di.ClassScanner;
+import in.HridayKh.be4j.di.DiContainer;
+import in.HridayKh.be4j.di.Registry;
+import in.HridayKh.be4j.di.RegistryValidator;
+import in.HridayKh.be4j.http.Http;
+import in.HridayKh.be4j.http.RouteRegistry;
 
 public class Main {
 

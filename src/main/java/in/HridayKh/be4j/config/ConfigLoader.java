@@ -1,4 +1,4 @@
-package in.HridayKh.config;
+package in.HridayKh.be4j.config;
 
 import java.io.IOException;
 import java.io.InputStream;

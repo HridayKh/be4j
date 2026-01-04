@@ -1,8 +1,8 @@
-package in.HridayKh.DI.ReflectionMetas;
+package in.HridayKh.be4j.di.ReflectionMetas;
 
 import java.lang.reflect.Method;
 
-import in.HridayKh.http.HttpMethod;
+import in.HridayKh.be4j.http.HttpMethod;
 
 public class MethodLevelPathMeta {
 	public final Class<?> controllerClass;

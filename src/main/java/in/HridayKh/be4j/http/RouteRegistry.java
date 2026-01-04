@@ -1,11 +1,11 @@
-package in.HridayKh.http;
+package in.HridayKh.be4j.http;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import in.HridayKh.DI.Registry;
-import in.HridayKh.DI.ReflectionMetas.MethodLevelPathMeta;
+import in.HridayKh.be4j.di.Registry;
+import in.HridayKh.be4j.di.ReflectionMetas.MethodLevelPathMeta;
 
 public class RouteRegistry {
 

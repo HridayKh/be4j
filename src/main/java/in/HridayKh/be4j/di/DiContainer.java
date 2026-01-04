@@ -1,12 +1,12 @@
-package in.HridayKh.DI;
+package in.HridayKh.be4j.di;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Comparator;
 
-import in.HridayKh.DI.ReflectionMetas.ConfigInjectionPoint;
-import in.HridayKh.DI.ReflectionMetas.InjectPoint;
-import in.HridayKh.DI.ReflectionMetas.SingletonMeta;
-import in.HridayKh.config.ConfigLoader;
+import in.HridayKh.be4j.config.ConfigLoader;
+import in.HridayKh.be4j.di.ReflectionMetas.ConfigInjectionPoint;
+import in.HridayKh.be4j.di.ReflectionMetas.InjectPoint;
+import in.HridayKh.be4j.di.ReflectionMetas.SingletonMeta;
 
 public class DiContainer {
 	private Registry registry = null;

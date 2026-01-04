@@ -1,7 +1,7 @@
 package in.HridayKh.sample;
 
-import in.HridayKh.DI.annotations.Path;
-import in.HridayKh.DI.annotations.Methods.GET;
+import in.HridayKh.be4j.annotations.Path;
+import in.HridayKh.be4j.annotations.Methods.GET;
 
 @Path("/foo")
 public class TestTon {

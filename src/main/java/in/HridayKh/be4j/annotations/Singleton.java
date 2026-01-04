@@ -1,4 +1,4 @@
-package in.HridayKh.DI.annotations;
+package in.HridayKh.be4j.annotations;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

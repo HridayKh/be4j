@@ -1,12 +1,13 @@
-package in.HridayKh.DI;
+package in.HridayKh.be4j.di;
 
 import java.util.HashMap;
 import java.util.Map;
-import in.HridayKh.DI.ReflectionMetas.ConfigInjectionPoint;
-import in.HridayKh.DI.ReflectionMetas.InjectPoint;
-import in.HridayKh.DI.ReflectionMetas.MethodLevelPathMeta;
-import in.HridayKh.DI.ReflectionMetas.SingletonMeta;
-import in.HridayKh.config.ConfigLoader;
+
+import in.HridayKh.be4j.config.ConfigLoader;
+import in.HridayKh.be4j.di.ReflectionMetas.ConfigInjectionPoint;
+import in.HridayKh.be4j.di.ReflectionMetas.InjectPoint;
+import in.HridayKh.be4j.di.ReflectionMetas.MethodLevelPathMeta;
+import in.HridayKh.be4j.di.ReflectionMetas.SingletonMeta;
 
 public class RegistryValidator {
 	private Registry registry = null;
