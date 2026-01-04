@@ -1,26 +1,27 @@
-package in.HridayKh.be4j.http;
+package in.HridayKh.be4j.runtime.http;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import in.HridayKh.be4j.di.Registry;
-import in.HridayKh.be4j.di.ReflectionMetas.MethodLevelPathMeta;
+import in.HridayKh.be4j.api.http.HttpMethods;
+import in.HridayKh.be4j.runtime.di.Registry;
+import in.HridayKh.be4j.runtime.di.ReflectionMetas.MethodLevelPathMeta;
 
-public class RouteRegistry {
+public class RoutesRegistry {
 
 	private Registry registry = null;
-	private final Map<HttpMethod, Map<String, RouteHandler>> routes = new HashMap<>();
+	private final Map<HttpMethods, Map<String, RouteHandler>> routes = new HashMap<>();
 
-	public RouteRegistry(Registry registry) {
+	public RoutesRegistry(Registry registry) {
 		this.registry = registry;
 	}
 
-	public RouteHandler find(HttpMethod method, String path) {
+	public RouteHandler find(HttpMethods method, String path) {
 		return routes.getOrDefault(method, Map.of()).get(path);
 	}
 
-	private void register(HttpMethod method, String path, Object controllerInstance, Method methodRef) {
+	private void register(HttpMethods method, String path, Object controllerInstance, Method methodRef) {
 		Map<String, RouteHandler> methodRoutes = routes.computeIfAbsent(method, k -> new HashMap<>());
 
 		if (methodRoutes.containsKey(path))
@@ -59,6 +60,17 @@ public class RouteRegistry {
 			path = path.substring(0, path.length() - 1);
 
 		return path;
+	}
+
+	public class RouteHandler {
+
+		Object controllerInstance;
+		Method method;
+
+		public RouteHandler(Object controllerInstance, Method method) {
+			this.controllerInstance = controllerInstance;
+			this.method = method;
+		}
 	}
 
 }

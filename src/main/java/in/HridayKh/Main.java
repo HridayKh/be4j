@@ -1,12 +1,12 @@
 package in.HridayKh;
 
-import in.HridayKh.be4j.config.ConfigLoader;
-import in.HridayKh.be4j.di.ClassScanner;
-import in.HridayKh.be4j.di.DiContainer;
-import in.HridayKh.be4j.di.Registry;
-import in.HridayKh.be4j.di.RegistryValidator;
-import in.HridayKh.be4j.http.Http;
-import in.HridayKh.be4j.http.RouteRegistry;
+import in.HridayKh.be4j.runtime.config.ConfigLoader;
+import in.HridayKh.be4j.runtime.di.ClassScanner;
+import in.HridayKh.be4j.runtime.di.DiContainer;
+import in.HridayKh.be4j.runtime.di.Registry;
+import in.HridayKh.be4j.runtime.di.RegistryValidator;
+import in.HridayKh.be4j.runtime.http.Http;
+import in.HridayKh.be4j.runtime.http.RoutesRegistry;
 
 public class Main {
 
@@ -44,7 +44,7 @@ public class Main {
 		System.out.println("[DI] Dependency injection completed in " + (preRouteRegistrationTime - preDiContainer) + " ms");
 		System.out.println("\n[ROUTE REGISTRY] Starting route registration...");
 
-		RouteRegistry routeRegistry = new RouteRegistry(registry);
+		RoutesRegistry routeRegistry = new RoutesRegistry(registry);
 		routeRegistry.registerAll();
 
 		long endTime = System.currentTimeMillis();
@@ -55,5 +55,7 @@ public class Main {
 		http.createServer(routeRegistry);
 		// http.killServer();
 	}
+
+	
 
 }

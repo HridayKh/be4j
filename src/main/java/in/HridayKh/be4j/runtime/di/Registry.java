@@ -1,14 +1,14 @@
-package in.HridayKh.be4j.di;
+package in.HridayKh.be4j.runtime.di;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import in.HridayKh.be4j.di.ReflectionMetas.ConfigInjectionPoint;
-import in.HridayKh.be4j.di.ReflectionMetas.InjectPoint;
-import in.HridayKh.be4j.di.ReflectionMetas.MethodLevelPathMeta;
-import in.HridayKh.be4j.di.ReflectionMetas.SingletonMeta;
+import in.HridayKh.be4j.runtime.di.ReflectionMetas.ConfigInjectionPoint;
+import in.HridayKh.be4j.runtime.di.ReflectionMetas.InjectPoint;
+import in.HridayKh.be4j.runtime.di.ReflectionMetas.MethodLevelPathMeta;
+import in.HridayKh.be4j.runtime.di.ReflectionMetas.SingletonMeta;
 
 public class Registry {
 

@@ -1,4 +1,4 @@
-package in.HridayKh.be4j.http;
+package in.HridayKh.be4j.runtime.http;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -6,7 +6,7 @@ import java.util.concurrent.Executors;
 
 import com.sun.net.httpserver.HttpServer;
 
-import in.HridayKh.be4j.config.ConfigLoader;
+import in.HridayKh.be4j.runtime.config.ConfigLoader;
 
 public class Http {
 
@@ -18,7 +18,7 @@ public class Http {
 		this.config = config;
 	}
 
-	public void createServer(RouteRegistry routeRegistry) {
+	public void createServer(RoutesRegistry routeRegistry) {
 		long startTime = System.currentTimeMillis();
 
 		int port = config.getInt("server.port", 8080);
@@ -34,7 +34,7 @@ public class Http {
 			return;
 		}
 
-		server.createContext("/", new HandleRootContext(routeRegistry));
+		server.createContext("/", new Dispatcher(routeRegistry));
 		server.setExecutor(Executors.newVirtualThreadPerTaskExecutor());
 		server.start();
 

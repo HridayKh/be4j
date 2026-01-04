@@ -1,4 +1,4 @@
-package in.HridayKh.be4j.di.ReflectionMetas;
+package in.HridayKh.be4j.runtime.di.ReflectionMetas;
 
 public class SingletonMeta {
 	public final Class<?> type;

@@ -1,4 +1,4 @@
-package in.HridayKh.be4j.annotations;
+package in.HridayKh.be4j.api.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

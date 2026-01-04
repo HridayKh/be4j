@@ -1,4 +1,4 @@
-package in.HridayKh.be4j.di;
+package in.HridayKh.be4j.runtime.di;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -12,21 +12,21 @@ import org.reflections.scanners.Scanners;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
-import in.HridayKh.be4j.annotations.Config;
-import in.HridayKh.be4j.annotations.Inject;
-import in.HridayKh.be4j.annotations.Path;
-import in.HridayKh.be4j.annotations.Singleton;
-import in.HridayKh.be4j.annotations.Methods.DELETE;
-import in.HridayKh.be4j.annotations.Methods.GET;
-import in.HridayKh.be4j.annotations.Methods.PATCH;
-import in.HridayKh.be4j.annotations.Methods.POST;
-import in.HridayKh.be4j.annotations.Methods.PUT;
-import in.HridayKh.be4j.config.ConfigLoader;
-import in.HridayKh.be4j.di.ReflectionMetas.ConfigInjectionPoint;
-import in.HridayKh.be4j.di.ReflectionMetas.InjectPoint;
-import in.HridayKh.be4j.di.ReflectionMetas.MethodLevelPathMeta;
-import in.HridayKh.be4j.di.ReflectionMetas.SingletonMeta;
-import in.HridayKh.be4j.http.HttpMethod;
+import in.HridayKh.be4j.api.annotations.Config;
+import in.HridayKh.be4j.api.annotations.Inject;
+import in.HridayKh.be4j.api.annotations.Path;
+import in.HridayKh.be4j.api.annotations.Singleton;
+import in.HridayKh.be4j.api.annotations.Methods.DELETE;
+import in.HridayKh.be4j.api.annotations.Methods.GET;
+import in.HridayKh.be4j.api.annotations.Methods.PATCH;
+import in.HridayKh.be4j.api.annotations.Methods.POST;
+import in.HridayKh.be4j.api.annotations.Methods.PUT;
+import in.HridayKh.be4j.api.http.HttpMethods;
+import in.HridayKh.be4j.runtime.config.ConfigLoader;
+import in.HridayKh.be4j.runtime.di.ReflectionMetas.ConfigInjectionPoint;
+import in.HridayKh.be4j.runtime.di.ReflectionMetas.InjectPoint;
+import in.HridayKh.be4j.runtime.di.ReflectionMetas.MethodLevelPathMeta;
+import in.HridayKh.be4j.runtime.di.ReflectionMetas.SingletonMeta;
 
 public class ClassScanner {
 
@@ -38,12 +38,12 @@ public class ClassScanner {
 		this.registry = reg;
 	}
 
-	private static final Map<Class<? extends Annotation>, HttpMethod> HTTP_ANNOTATIONS = Map.of(
-			GET.class, HttpMethod.GET,
-			POST.class, HttpMethod.POST,
-			PUT.class, HttpMethod.PUT,
-			PATCH.class, HttpMethod.PATCH,
-			DELETE.class, HttpMethod.DELETE);
+	private static final Map<Class<? extends Annotation>, HttpMethods> HTTP_ANNOTATIONS = Map.of(
+			GET.class, HttpMethods.GET,
+			POST.class, HttpMethods.POST,
+			PUT.class, HttpMethods.PUT,
+			PATCH.class, HttpMethods.PATCH,
+			DELETE.class, HttpMethods.DELETE);
 
 	public void scan() {
 		String pkg = config.get("server.app.package", "in.HridayKh.sample");
@@ -74,7 +74,7 @@ public class ClassScanner {
 
 			for (Method method : cls.getDeclaredMethods()) {
 				// @Path (method-level)
-				Set<HttpMethod> httpMethods = extractHttpMethods(method);
+				Set<HttpMethods> httpMethods = extractHttpMethods(method);
 				if (httpMethods.isEmpty())
 					continue;
 
@@ -82,7 +82,7 @@ public class ClassScanner {
 						? method.getAnnotation(Path.class).value()
 						: "";
 
-				for (HttpMethod httpMethod : httpMethods) {
+				for (HttpMethods httpMethod : httpMethods) {
 					registry.methodLevelPaths.add(
 							new MethodLevelPathMeta(cls, method, httpMethod, methodPath));
 					System.out.println("[SCAN] Registered method-level path: " + cls.getName() + "#"
@@ -126,8 +126,8 @@ public class ClassScanner {
 		System.out.println("[SCAN] Completed classpath scan; found " + allClasses.size() + " classes.");
 	}
 
-	private Set<HttpMethod> extractHttpMethods(Method method) {
-		Set<HttpMethod> methods = EnumSet.noneOf(HttpMethod.class);
+	private Set<HttpMethods> extractHttpMethods(Method method) {
+		Set<HttpMethods> methods = EnumSet.noneOf(HttpMethods.class);
 
 		for (var entry : HTTP_ANNOTATIONS.entrySet()) {
 			if (method.isAnnotationPresent(entry.getKey())) {

@@ -1,4 +1,4 @@
-package in.HridayKh.be4j.http;
+package in.HridayKh.be4j.runtime.http;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -8,11 +8,14 @@ import java.nio.charset.StandardCharsets;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-public class HandleRootContext implements HttpHandler {
+import in.HridayKh.be4j.api.http.HttpMethods;
+import in.HridayKh.be4j.runtime.http.RoutesRegistry.RouteHandler;
 
-	private final RouteRegistry routeRegistry;
+public class Dispatcher implements HttpHandler {
 
-	public HandleRootContext(RouteRegistry routeRegistry) {
+	private final RoutesRegistry routeRegistry;
+
+	public Dispatcher(RoutesRegistry routeRegistry) {
 		this.routeRegistry = routeRegistry;
 	}
 
@@ -30,9 +33,9 @@ public class HandleRootContext implements HttpHandler {
 
 		String methodName = exchange.getRequestMethod();
 
-		HttpMethod httpMethod;
+		HttpMethods httpMethod;
 		try {
-			httpMethod = HttpMethod.valueOf(methodName);
+			httpMethod = HttpMethods.valueOf(methodName);
 		} catch (IllegalArgumentException e) {
 			send(exchange, 405, "Method Not Allowed");
 			return;
