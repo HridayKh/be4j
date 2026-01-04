@@ -1,0 +1,47 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Set version
+        run: mvn versions:set -DnewVersion=${GITHUB_REF_NAME#v} ; mvn versions:commit
+
+      - name: Build
+        run: mvn clean package
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          body_path: CHANGELOG.md
+
+      - name: Bump version to next SNAPSHOT
+        run: |
+          CURRENT=${GITHUB_REF_NAME#v}
+          NEXT=$(echo $CURRENT | awk -F. '{printf "%d.%d.%d", $1, $2, $3+1}')
+          mvn versions:set -DnewVersion=$NEXT-SNAPSHOT
+          mvn versions:commit
+
+      - name: Commit version bump
+        run: |
+          git config user.name "be4j-release-actions-bot"
+          git config user.email "actions@github.com"
+          git add pom.xml
+          git commit -m "chore: start $NEXT-SNAPSHOT [skip ci]"
+          git push origin main
+
