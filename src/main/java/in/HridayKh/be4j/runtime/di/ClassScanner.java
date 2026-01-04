@@ -3,7 +3,10 @@ package in.HridayKh.be4j.runtime.di;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -12,9 +15,13 @@ import org.reflections.scanners.Scanners;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
+import in.HridayKh.be4j.api.annotations.Body;
 import in.HridayKh.be4j.api.annotations.Config;
+import in.HridayKh.be4j.api.annotations.Consumes;
 import in.HridayKh.be4j.api.annotations.Inject;
 import in.HridayKh.be4j.api.annotations.Path;
+import in.HridayKh.be4j.api.annotations.PathParam;
+import in.HridayKh.be4j.api.annotations.QueryParam;
 import in.HridayKh.be4j.api.annotations.Singleton;
 import in.HridayKh.be4j.api.annotations.Methods.DELETE;
 import in.HridayKh.be4j.api.annotations.Methods.GET;
@@ -26,6 +33,8 @@ import in.HridayKh.be4j.runtime.config.ConfigLoader;
 import in.HridayKh.be4j.runtime.di.ReflectionMetas.ConfigInjectionPoint;
 import in.HridayKh.be4j.runtime.di.ReflectionMetas.InjectPoint;
 import in.HridayKh.be4j.runtime.di.ReflectionMetas.MethodLevelPathMeta;
+import in.HridayKh.be4j.runtime.di.ReflectionMetas.ParamMeta;
+import in.HridayKh.be4j.runtime.di.ReflectionMetas.ParamMeta.ParamSource;
 import in.HridayKh.be4j.runtime.di.ReflectionMetas.SingletonMeta;
 
 public class ClassScanner {
@@ -67,7 +76,7 @@ public class ClassScanner {
 
 			// @Path (class-level)
 			if (cls.isAnnotationPresent(Path.class)) {
-				registry.classLevelPaths.put(cls,cls.getAnnotation(Path.class).value());
+				registry.classLevelPaths.put(cls, cls.getAnnotation(Path.class).value());
 				System.out.println("[SCAN] Registered class-level path: " + cls.getName() + " -> "
 						+ cls.getAnnotation(Path.class).value());
 			}
@@ -82,9 +91,33 @@ public class ClassScanner {
 						? method.getAnnotation(Path.class).value()
 						: "";
 
+				String consumes = null;
+				if (method.isAnnotationPresent(Consumes.class))
+					consumes = method.getAnnotation(Consumes.class).value();
+
+				Parameter[] methodParams = method.getParameters();
+				List<ParamMeta> parameters = new ArrayList<>();
+				for (int i = 0; i < methodParams.length; i++) {
+					Parameter param = methodParams[i];
+					if (param.isAnnotationPresent(PathParam.class)) {
+						PathParam pp = param.getAnnotation(PathParam.class);
+						parameters.add(new ParamMeta(i, param.getType(), pp.value(),
+								ParamSource.PATH));
+					} else if (param.isAnnotationPresent(QueryParam.class)) {
+						QueryParam qp = param.getAnnotation(QueryParam.class);
+						parameters.add(new ParamMeta(i, param.getType(), qp.value(),
+								ParamSource.QUERY));
+					} else if (param.isAnnotationPresent(Body.class)) {
+						parameters.add(new ParamMeta(i, param.getType(), null,
+								ParamSource.BODY));
+					}
+					// @HeaderParam to be added here later
+				}
+
 				for (HttpMethods httpMethod : httpMethods) {
-					registry.methodLevelPaths.add(
-							new MethodLevelPathMeta(cls, method, httpMethod, methodPath));
+					MethodLevelPathMeta mlpm = new MethodLevelPathMeta(cls, method, httpMethod,
+							methodPath, parameters, consumes);
+					registry.methodLevelPaths.add(mlpm);
 					System.out.println("[SCAN] Registered method-level path: " + cls.getName() + "#"
 							+ method.getName()
 							+ " [" + httpMethod + "] " + methodPath);

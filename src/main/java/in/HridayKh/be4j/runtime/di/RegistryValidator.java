@@ -24,6 +24,7 @@ public class RegistryValidator {
 				+ ", injectPoints=" + registry.injectPoints.size() + ", configInjectionPoints="
 				+ registry.configInjectionPoints.size());
 
+		// check for duplicate routes
 		Map<String, MethodLevelPathMeta> seen = new HashMap<>();
 		for (MethodLevelPathMeta route : registry.methodLevelPaths) {
 			String key = route.httpMethod + " " + route.fullPath;
@@ -38,12 +39,14 @@ public class RegistryValidator {
 			seen.put(key, route);
 		}
 
+		// check for unsatisfied dependencies
 		for (InjectPoint ip : registry.injectPoints) {
 			Class<?> depType = ip.field.getType();
 			if (!registry.singletons.containsKey(depType))
 				System.err.println("[VALIDATION] Unsatisfied dependency: " + depType.getName());
 		}
 
+		// check for missing config keys
 		for (ConfigInjectionPoint cip : registry.configInjectionPoints) {
 			java.util.Optional<?> opt = config.get(cip.configKey);
 			if (!opt.isPresent() || opt.isEmpty())
@@ -55,7 +58,9 @@ public class RegistryValidator {
 		}
 
 		for (MethodLevelPathMeta mlpm : registry.methodLevelPaths) {
+			// check for missing singletons for method-level @Path
 			ensureSingleton(mlpm.controllerClass, "method-level @Path but no class-level @Singleton/@Path");
+			
 		}
 
 		System.out.println("[VALIDATION] Completed registry validation");

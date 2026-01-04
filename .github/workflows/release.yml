@@ -51,7 +51,7 @@ jobs:
           mvn versions:set -DnewVersion=$NEXT-SNAPSHOT
           mvn versions:commit
 
-      - name: Bump version to next SNAPSHOT
+      - name: Update main branch with new version
         run: |
           CURRENT=${GITHUB_REF_NAME#v}
           NEXT=$(echo $CURRENT | awk -F. '{printf "%d.%d.%d", $1, $2, $3+1}')
@@ -66,7 +66,7 @@ jobs:
           git config user.email "actions@github.com"
 
           git add pom.xml
-          git commit -m "chore: start $NEXT-SNAPSHOT [skip ci]"
+          git commit -m "chore: start next version ($NEXT-SNAPSHOT)"
           git push origin main
 
 
