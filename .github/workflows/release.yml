@@ -9,15 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  update-version:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set version
-        run: mvn versions:set -DnewVersion=${GITHUB_REF_NAME#v} ; mvn versions:commit
-
-  build:
-    needs: update-version
+  update-version-then-build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,8 +20,11 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Build
-        run: mvn clean package
+      - name: Set version and build
+        run: |
+          mvn versions:set -DnewVersion=${GITHUB_REF_NAME#v}
+          mvn versions:commit
+          mvn clean package
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -39,8 +34,8 @@ jobs:
           body_path: CHANGELOG.md
           files: target/be4j-*.jar
 
-  bump-version:
-    needs: build
+  bump-version-for-next-development:
+    needs: update-version-then-build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
