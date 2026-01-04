@@ -1,6 +1,5 @@
 package in.HridayKh.be4j.runtime.http;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
