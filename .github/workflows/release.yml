@@ -22,9 +22,9 @@ jobs:
 
       - name: Set version and build
         run: |
-          mvn versions:set -DnewVersion=${GITHUB_REF_NAME#v}
-          mvn versions:commit
-          mvn clean package
+          mvn -B -ntp versions:set -DnewVersion=${GITHUB_REF_NAME#v}
+          mvn -B -ntp versions:commit
+          mvn -B -ntp clean package
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -43,8 +43,8 @@ jobs:
         run: |
           CURRENT=${GITHUB_REF_NAME#v}
           NEXT=$(echo $CURRENT | awk -F. '{printf "%d.%d.%d", $1, $2, $3+1}')
-          mvn versions:set -DnewVersion=$NEXT-SNAPSHOT
-          mvn versions:commit
+          mvn -B -ntp versions:set -DnewVersion=$NEXT-SNAPSHOT
+          mvn -B -ntp versions:commit
 
       - name: Update main branch with new version
         run: |
@@ -54,8 +54,8 @@ jobs:
           git fetch origin main
           git checkout main
 
-          mvn versions:set -DnewVersion=$NEXT-SNAPSHOT
-          mvn versions:commit
+          mvn -B -ntp versions:set -DnewVersion=$NEXT-SNAPSHOT
+          mvn -B -ntp versions:commit
 
           git config user.name "be4j-release-actions-bot"
           git config user.email "actions@github.com"
